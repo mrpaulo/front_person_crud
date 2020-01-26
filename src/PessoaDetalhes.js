@@ -38,6 +38,7 @@ class PessoaDetalhes extends Component {
         console.log(this.state.id)
         // eslint-disable-next-line
         if (this.state.id == -1) {
+            this.setState({ subtitulo: "Adicionar pessoa" });
             return
         }
 
@@ -45,9 +46,8 @@ class PessoaDetalhes extends Component {
             .then(response => {
                 let pessoa = response.data
                 pessoa.cpf = Utils.formataCPF(pessoa.cpf);
-                //pessoa.sexo = pessoa.sexo == 'm' ? "masculino" : "Feminino"
-                //pessoa.dataNascimento = new Date(pessoa.dataNascimento)
-                this.setState({ pessoa: pessoa })
+                
+                this.setState({ pessoa: pessoa, subtitulo: "Editar pessoa" })
             })
     }
     onSubmit(values) {
@@ -78,7 +78,10 @@ class PessoaDetalhes extends Component {
         let errors = {}
         if (!values.nome) {
             errors.nome = 'Informar o nome é obrigatório'
+        } else if (values.nome.length > 100) {
+            errors.nome = 'Tamanho máximo do nome é de 100 caracteres'
         }
+
         if (!values.cpf) {
             errors.cpf = 'Informar o CPF é obrigatório'
         } else if (Utils.validaErroCPF(values.cpf)) {
@@ -93,18 +96,41 @@ class PessoaDetalhes extends Component {
 
         if (Utils.validaErroEmail(values.email)) {
             errors.email = 'E-mail informado é inválido'
+        } else if (values.email && values.email.length > 100) {
+            errors.email = 'Tamanho máximo do e-mail é de 100 caracteres'
+        }
+
+        if (values.naturalidade && values.naturalidade.length > 100) {
+            errors.naturalidade = 'Tamanho máximo da naturalidade é de 100 caracteres'
+        }
+
+        if (values.nacionalidade && values.nacionalidade.length > 100) {
+            errors.nacionalidade = 'Tamanho máximo da nacionalidade é de 100 caracteres'
         }
 
         return errors
     }
+    limparForm() {
+        let pessoa = {
+            nome: '',
+            cpf: '',
+            email: '',
+            dataNascimento: '',
+            sexo: '',
+            nacionalidade: '',
+            naturalidade: ''
+        }
+        this.setState({pessoa: pessoa})
+    }
 
     render() {
+        let subtitulo = this.state.subtitulo;
         let id = this.state.id;
         let { nome, cpf, email, dataNascimento, sexo, nacionalidade, naturalidade } = this.state.pessoa;
         return (
 
             <div>
-                <h3>Pessoa Detalhes</h3>
+                <h3>{subtitulo}</h3>
                 <div className="container">
                     <Formik
                         initialValues={{ id, nome, cpf, email, dataNascimento, sexo, nacionalidade, naturalidade }}
@@ -152,16 +178,11 @@ class PessoaDetalhes extends Component {
                                         <fieldset className="form-group">
                                             <label>Sexo</label>
                                             {/* <Field className="form-control" type="text" name="sexo" /> */}
-                                            <select
-                                                className="form-control"
-                                                name="sexo"
-                                                value="sexo"                                                
-                                                style={{ display: 'block' }}
-                                            >
+                                            <Field as="select" className="form-control" name="sexo">
                                                 <option value="" label="Selecione" />
                                                 <option value="M" label="Masculino" />
                                                 <option value="F" label="Feminino" />
-                                            </select>
+                                            </Field>                                            
                                         </fieldset>
                                         <ErrorMessage name="dataNascimento" component="div"
                                             className="alert alert-warning" />
@@ -169,17 +190,23 @@ class PessoaDetalhes extends Component {
                                             <label>Data Nascimento</label>
                                             <Field className="form-control" type="date" name="dataNascimento" />
                                         </fieldset>
+                                        <ErrorMessage name="naturalidade" component="div"
+                                            className="alert alert-warning" />
                                         <fieldset className="form-group">
                                             <label>Naturalidade</label>
                                             <Field className="form-control" type="text" name="naturalidade" />
                                         </fieldset>
+                                        <ErrorMessage name="nacionalidade" component="div"
+                                            className="alert alert-warning" />
                                         <fieldset className="form-group">
                                             <label>Nacionalidade</label>
                                             <Field className="form-control" type="text" name="nacionalidade" />
                                         </fieldset>
+                                        <div style={{marginBottom: '20px'}}>
                                         <button className="btn btn-success" type="submit">Salvar</button>
-                                        <button className="btn btn-warning" type="reset">Limpar</button>
-                                        <button className="btn btn-alert" type="reset" onClick={() => this.props.history.push('/pessoas')}>Cancelar</button>
+                                        <button className="btn btn-warning" style={{marginLeft: '10px'}} type="reset" onClick={() => this.limparForm()}>Limpar</button>
+                                        <button className="btn btn-alert" style={{marginLeft: '10px'}} type="reset" onClick={() => this.props.history.push('/pessoas')}>Cancelar</button>
+                                        </div>
                                     </Form>
                                 )
                             }

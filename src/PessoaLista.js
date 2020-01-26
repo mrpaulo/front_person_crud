@@ -50,11 +50,11 @@ class PessoaLista extends Component {
         console.log('update ' + id)
         this.props.history.push(`/pessoa/${id}`)
     }
-    excluirPessoa(id) {
+    excluirPessoa(id, nome) {
         PessoaDataService.excluirPessoa(id)
             .then(
                 response => {
-                    this.setState({ message: `Delete of course ${id} Successful` })
+                    this.setState({ message: `Pessoa ${nome} removida com sucesso` })
                     this.refreshPessoas()
                 }
             )
@@ -77,8 +77,8 @@ class PessoaLista extends Component {
                                 <th>Data nascimento</th>
                                 <th>Naturalidade</th>
                                 <th>Nacionalidade</th>
-                                <th>Update</th>
-                                <th>Delete</th>
+                                <th> </th>
+                                <th> </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,7 +94,7 @@ class PessoaLista extends Component {
                                             <td>{pessoa.naturalidade}</td>
                                             <td>{pessoa.nacionalidade}</td>
                                             <td><button className="btn btn-success" onClick={() => this.editarPessoa(pessoa.id)}>Editar</button></td>
-                                            <td><button className="btn btn-warning" onClick={() => this.excluirPessoa(pessoa.id)}>Excluir</button></td>
+                                            <td><button className="btn btn-warning" onClick={() => {if (window.confirm(`Você tem certeza que deseja excluir ${pessoa.nome}?`)) {this.excluirPessoa(pessoa.id, pessoa.nome)}}}>Excluir</button></td>
                                         </tr>
                                 )
                             }

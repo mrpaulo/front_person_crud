@@ -8,7 +8,7 @@ import PessoaDetalhes from './PessoaDetalhes';
 class PessoaApp extends Component {
     render() {
         return (<>
-              <h1>Pessoa Application</h1>
+              <h1>Cadastro de Pessoas</h1>
               <Router>
                 <>                    
                     <Switch>

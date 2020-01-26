@@ -53,7 +53,7 @@ class Utils {
         var ExpReg = new RegExp("(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[12][0-9]{3}");
         ardt = date.split("/");
         var erro = false;
-        var dataNascimento = new Date(date)
+        var dataNascimento = new Date(dataNascimentoPar)
         var hoje = new Date()
 
         if (dataNascimento > hoje) {
