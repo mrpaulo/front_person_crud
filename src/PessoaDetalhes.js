@@ -31,11 +31,11 @@ class PessoaDetalhes extends Component {
             pessoa: {}
         }
         this.onSubmit = this.onSubmit.bind(this)
-        this.validate = this.validate.bind(this)
+        this.validate = this.validate.bind(this) 
+        this.mensagemServidor = this.mensagemServidor.bind(this)
     }
     componentDidMount() {
-
-        console.log(this.state.id)
+        
         // eslint-disable-next-line
         if (this.state.id == -1) {
             this.setState({ subtitulo: "Adicionar pessoa" });
@@ -51,7 +51,6 @@ class PessoaDetalhes extends Component {
             })
     }
     onSubmit(values) {
-        console.log(values);
         let pessoa = {
             id: this.state.id,
             cpf: Utils.retiraFormatCPF(values.cpf),
@@ -66,12 +65,25 @@ class PessoaDetalhes extends Component {
         if (this.state.id == -1) {
             PessoaDataService.adicionarPessoa(pessoa)
                 .then(() => this.props.history.push('/pessoas'))
+                .catch(err => this.mensagemServidor(err))
         } else {
             PessoaDataService.editarPessoa(this.state.id, pessoa)
                 .then(() => this.props.history.push('/pessoas'))
+                .catch(err => this.mensagemServidor(err))
         }
 
 
+    }
+    mensagemServidor (err) {
+        let errObj = JSON.parse(JSON.stringify(err));
+        console.log(errObj)
+                    let mensagem = "Ocorreu um erro no servidor: "
+                    if(errObj.message == "Request failed with status code 500"){
+                    mensagem = mensagem + "Não é permitido cadastrar o mesmo CPF"
+                    } else {
+                        mensagem = mensagem + errObj.message;
+                    }
+                    window.alert(mensagem)
     }
 
     validate(values) {
@@ -148,7 +160,7 @@ class PessoaDetalhes extends Component {
                                         <ErrorMessage name="nome" component="div"
                                             className="alert alert-warning" />
                                         <fieldset className="form-group">
-                                            <label>Nome</label>
+                                            <label>Nome *</label>
                                             <Field className="form-control" type="text" name="nome" />
                                         </fieldset>
                                         <ErrorMessage name="email" component="div"
@@ -160,7 +172,7 @@ class PessoaDetalhes extends Component {
                                         <ErrorMessage name="cpf" component="div"
                                             className="alert alert-warning" />
                                         <fieldset className="form-group">
-                                            <label>CPF</label>
+                                            <label>CPF *</label>
                                             <Field
                                                 className="form-control"
                                                 name="cpf"
@@ -187,7 +199,7 @@ class PessoaDetalhes extends Component {
                                         <ErrorMessage name="dataNascimento" component="div"
                                             className="alert alert-warning" />
                                         <fieldset className="form-group">
-                                            <label>Data Nascimento</label>
+                                            <label>Data Nascimento *</label>
                                             <Field className="form-control" type="date" name="dataNascimento" />
                                         </fieldset>
                                         <ErrorMessage name="naturalidade" component="div"
@@ -202,10 +214,14 @@ class PessoaDetalhes extends Component {
                                             <label>Nacionalidade</label>
                                             <Field className="form-control" type="text" name="nacionalidade" />
                                         </fieldset>
+                                        <div style={{marginBottom: '10px'}}>
+                                        (*) Campos obrigatórios
+                                        </div>
                                         <div style={{marginBottom: '20px'}}>
                                         <button className="btn btn-success" type="submit">Salvar</button>
                                         <button className="btn btn-warning" style={{marginLeft: '10px'}} type="reset" onClick={() => this.limparForm()}>Limpar</button>
                                         <button className="btn btn-alert" style={{marginLeft: '10px'}} type="reset" onClick={() => this.props.history.push('/pessoas')}>Cancelar</button>
+
                                         </div>
                                     </Form>
                                 )

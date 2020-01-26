@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import PessoaLista from './PessoaLista';
 import PessoaDetalhes from './PessoaDetalhes';
-
+import { LoginPage } from './LoginPage';
+import { PrivateRoute } from './PrivateRoute'
 
 class PessoaApp extends Component {
     render() {
@@ -12,9 +13,10 @@ class PessoaApp extends Component {
               <Router>
                 <>                    
                     <Switch>
-                        <Route exact path="/" component={PessoaLista} />
-                        <Route path="/pessoas" component={PessoaLista} />
-                        <Route path="/pessoa/:id" component={PessoaDetalhes}/>} />
+                        <PrivateRoute exact path="/" component={PessoaLista} />
+                        <Route path="/login" component={LoginPage} />
+                        <PrivateRoute path="/pessoas" component={PessoaLista} />
+                        <PrivateRoute path="/pessoa/:id" component={PessoaDetalhes}/>} />
                     </Switch>
                 </>
             </Router>

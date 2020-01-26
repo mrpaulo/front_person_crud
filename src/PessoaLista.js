@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PessoaDataService from './PessoaDataService';
 import Utils from './Utils';
+import { userService } from './userService';
 
 class PessoaLista extends Component {
 
@@ -8,7 +9,8 @@ class PessoaLista extends Component {
         super(props)
         this.state = {
             pessoas: [],
-            message: null
+            message: null,
+            erro: ''
         }
 
         this.refreshPessoas = this.refreshPessoas.bind(this)
@@ -17,7 +19,7 @@ class PessoaLista extends Component {
         this.adicionarPessoa = this.adicionarPessoa.bind(this)
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.refreshPessoas();
     }
 
@@ -37,17 +39,17 @@ class PessoaLista extends Component {
                             }
                         });
                     }
-
-                    console.log(response);
                     this.setState({ pessoas: listaPessoas })
                 }
-            )
+            ).catch(
+                () => {
+                    window.location.reload()                   
+                })
     }
     adicionarPessoa() {
         this.props.history.push(`/pessoa/-1`)
     }
     editarPessoa(id) {
-        console.log('update ' + id)
         this.props.history.push(`/pessoa/${id}`)
     }
     excluirPessoa(id, nome) {
@@ -64,7 +66,15 @@ class PessoaLista extends Component {
     render() {
         return (
             <div className="container">
-                <h3>Todas pessoas</h3>
+                <div className="row">
+                    <div className="col-md-11">
+                        <h3>Todas pessoas</h3>
+                    </div>
+                    <div className="col-md-1">
+                        <button className="btn btn-alert" onClick={() => this.props.history.push(`/login`)}>Sair</button>
+                    </div>
+                </div>
+                
                 {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
                 <div className="container">
                     <table className="table">
