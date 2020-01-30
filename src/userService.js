@@ -2,7 +2,7 @@ import axios from 'axios'
 import {defineConstErro} from './LoginPage'
 
 export const config = {
-    API_URL: 'http://springbootapp:4060/personcrud/api',
+    API_URL: 'http://localhost:4060/personcrud/api',
     API_VERSION_1: '/v1',
     PESSOAS_API: '/pessoas',
     PESSOA_API: '/pessoa/'

@@ -1,68 +1,35 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Front Person CRUD (front_person_crud)
 
-## Available Scripts
+Este é um projeto em ReactJS de um cadastro de pessoas com uma autenticação basic através de uma tela de login.
+Possui as seguintes características:
+- Nome com no máximo 100 caracteres e de preenchimento obrigatório;
+- CPF com um número válido, não pode ter outra pessoa já cadastrada com o mesmo número e de preenchimento obrigatório;
+- Data de nascimento ser uma data válida e não posterior a data do cadastro e de preenchimento obrigatório;
+- Caso seja preenchido o e-mail ter o padrão mínimo "usuario@provedor.com" com no máximo 100 caracteres;
+- Informação de sexo, através de um seletor;
+- Informação de cidade de nascimento com no máximo 100 caracteres;
+- Informação de país de nascimento com no máximo 100 caracteres;
 
-In the project directory, you can run:
+O Front Person CRUD integra com meu projeto PersonCRUD [https://github.com/mrpaulo/PersonCRUD] que foi feito em Java Spring Boot para servir-lo e para persistir os dados foi usado o PostgresSQL para fazer a ligação entre os dois foi utilizado o Nginx.
 
-### `yarn start`
+Foram feitas as configurações necessárias para criar uma imagem dele com Docker e colocá-lo em um conteiner para rodar juntamente com o PersonCRUD (backend);
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Instruções para instalação: 
+	- Instalar o Docker [https://www.docker.com/], Docker Compose [https://docs.docker.com/compose/install/], Java [https://www.java.com/en/download/], Spring Boot com Maven [https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html] e PostgresSQL [https://www.postgresql.org/] instuções nos links;
+	- Fazer o git clone deste repositório, ou baixá-lo e extraí-lo na sua pasta de preferência;
+	- Dentro da pasta do projeto através de um terminal rodar o comando "docker build -t rodrigues/frontapppersoncrud:2 . " (sem as aspas);
+	- Sair da pasta do projeto e fazer o git clone do projeto PersonCRUD [https://github.com/mrpaulo/PersonCRUD] ou baixa-lo e extrai-lo na sua pasta de preferência;
+	- Dentro da pasta do PersonCRUD através de um terminal rodar os comandos o que está dentro das aspas: 
+		1 - "docker create -v /var/lib/postgresql/data --name postgres alpine"; -- Cria a imagem do banco de dados
+		2 - "docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=postgres -d --volumes-from postgres postgres" -- Roda a imagem para ter acesso ao banco de dados, se der erro de porta mude a parte que vem depois do -p ou pare o postgres que está rodando localmente;
+		3 - "psql -U postgres " -- Acessa o banco de dados, irá pedir uma senha que é postgres;
+		4 - "create database cadastro_pessoa" -- Cria o banco de dados;
+		5 - "\q" -- para sair do postgres;
+		6 - "docker ps" -- para pegar o identificador do conteiner do postgres (ID_DO_CONTEINER);
+		7 - "docker stop ID_DO_CONTEINER" substituindo a palavra ID_DO_CONTEINER pelo codigo que aparece na primeira coluna (CONTAINER ID) do resultado do comando docker ps;
+		8 - "mvn clean package" -- compile o programa do backend (PersonCRUD)
+		9 - "docker build -t rodrigues/backpersoncrud:1 . " -- Cria a imagem do backend (PersonCRUD)
+		10 - "docker-compose up --build" -- Cria a imagem do backend 
+		
+Instruções de uso:
+	No navegador de sua preferência (recomendo Chrome) acesse [http://localhost:9090/]  E pronto!
